@@ -1,5 +1,7 @@
 # AWS CDK Image
 
+This image based on `amazon/aws-sam-cli-build-image-nodejs18.x`, and you can use Node.js, AWS CLI, CDK CLI.
+
 ## Usage
 
 ```shell
