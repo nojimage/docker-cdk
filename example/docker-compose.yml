@@ -1,0 +1,19 @@
+version: '3.6'
+
+name: 'your-project-name'
+
+volumes:
+  aws-profile:
+    driver: local
+  cdk-store:
+    driver: local
+
+services:
+  sh:
+    image: public.ecr.aws/nojimage/docker-cdk:latest
+    volumes:
+      - aws-profile:/root/.aws
+      - cdk-store:/root/.cdk
+      - ./:/var/stack
+    environment:
+      IN_DOCKER: 1
