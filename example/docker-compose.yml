@@ -10,7 +10,7 @@ volumes:
 
 services:
   sh:
-    image: public.ecr.aws/nojimage/docker-cdk:latest
+    image: ghcr.io/nojimage/docker-cdk:2
     volumes:
       - aws-profile:/root/.aws
       - cdk-store:/root/.cdk
