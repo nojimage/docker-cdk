@@ -17,13 +17,13 @@ docker compose run --rm sh {any command}
 docker compose run --rm sh aws configure
 ```
 
-#### CDK init
+### CDK init
 
 ```sh
 docker compose run --rm sh cdk init app --language=typescript
 ```
 
-#### CDK deploy
+### CDK deploy
 
 ```sh
 docker compose run --rm sh cdk deploy
