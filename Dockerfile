@@ -1,7 +1,7 @@
-FROM public.ecr.aws/sam/build-nodejs18.x:latest
+FROM public.ecr.aws/sam/build-nodejs20.x:latest
 
 RUN npm install -g aws-cdk@^2 typescript esbuild && npm install -g npm@^10
-RUN yum install -y openssl
+RUN dnf install -y openssl
 
 WORKDIR /var/stack/
 

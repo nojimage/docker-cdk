@@ -3,7 +3,7 @@
 ## sh container
 
 `sh` is provided as a container for development.
-This container based on `amazon/aws-sam-cli-build-image-nodejs18.x`, and you can use Node.js, AWS CLI, CDK CLI.
+This container based on `amazon/aws-sam-cli-build-image-nodejs20.x`, and you can use Node.js, AWS CLI, CDK CLI.
 
 ```shell
 docker compose run --rm sh {any command}

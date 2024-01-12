@@ -1,11 +1,11 @@
 # AWS CDK Image
 
-This image based on `amazon/aws-sam-cli-build-image-nodejs18.x`, and you can use Node.js, AWS CLI, CDK CLI.
+This image based on `amazon/aws-sam-cli-build-image-nodejs20.x`, and you can use Node.js, AWS CLI, CDK CLI.
 
 ## Usage
 
 ```shell
-docker pull ghcr.io/nojimage/docker-cdk:2
+docker pull ghcr.io/nojimage/docker-cdk:2.20
 ```
 
 ## Version semantics
@@ -14,4 +14,4 @@ docker pull ghcr.io/nojimage/docker-cdk:2
 - minor: Node.js version
 - patch: patch version
 
-e.g. 2.18.0 => CDK 2.x with Node.js 18.x
+e.g. 2.20.0 => CDK 2.x with Node.js 20.x
