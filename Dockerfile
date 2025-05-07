@@ -1,6 +1,6 @@
-FROM public.ecr.aws/sam/build-nodejs20.x:latest
+FROM public.ecr.aws/sam/build-nodejs22.x:latest
 
-RUN npm install -g aws-cdk@^2 typescript esbuild && npm install -g npm@^10
+RUN npm install -g aws-cdk@^2 typescript esbuild && npm install -g npm@^11
 RUN dnf install -y openssl
 
 # Install Session Manager plugin
