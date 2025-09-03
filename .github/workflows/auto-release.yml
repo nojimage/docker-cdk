@@ -4,7 +4,7 @@ on:
   pull_request:
     types: [closed]
     branches:
-      - v2.20
+      - v2.18
 
 jobs:
   create-release:
@@ -37,9 +37,9 @@ jobs:
           CDK_MAJOR=$(echo $CDK_VERSION | cut -d. -f1)
           CDK_MINOR=$(echo $CDK_VERSION | cut -d. -f2)
           CDK_PATCH=$(echo $CDK_VERSION | cut -d. -f3)
-          NODE_VERSION="20"
+          NODE_VERSION="18"
           
-          # タグバージョンの生成（例: CDK 2.170.0 -> 2.20.170）
+          # タグバージョンの生成（例: CDK 2.170.0 -> 2.18.170）
           TAG_VERSION="${CDK_MAJOR}.${NODE_VERSION}.${CDK_MINOR}"
           
           echo "tag_version=$TAG_VERSION" >> $GITHUB_OUTPUT
@@ -57,8 +57,8 @@ jobs:
             
             ### Versions
             - **AWS CDK**: ${{ steps.get-version.outputs.cdk_version }}
-            - **Node.js**: 20.x
-            - **Base Image**: amazon/aws-sam-cli-build-image-nodejs20.x
+            - **Node.js**: 18.x
+            - **Base Image**: amazon/aws-sam-cli-build-image-nodejs18.x
             
             ### What's Changed
             - Updated AWS CDK to version ${{ steps.get-version.outputs.cdk_version }}

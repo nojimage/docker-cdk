@@ -10,7 +10,7 @@ jobs:
   check-update:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/nojimage/docker-cdk:2.20
+      image: ghcr.io/nojimage/docker-cdk:2.18
     outputs:
       update_available: ${{ steps.check.outputs.update_available }}
       current_version: ${{ steps.check.outputs.current_version }}
@@ -78,9 +78,9 @@ jobs:
           CDK_VERSION="${{ needs.check-update.outputs.latest_version }}"
           CDK_MAJOR=$(echo $CDK_VERSION | cut -d. -f1)
           CDK_MINOR=$(echo $CDK_VERSION | cut -d. -f2)
-          NODE_VERSION="20"
+          NODE_VERSION="18"
           
-          # タグ名を生成（例: 2.170.0 -> 2.20.170）
+          # タグ名を生成（例: 2.170.0 -> 2.18.170）
           TAG_VERSION="${CDK_MAJOR}.${NODE_VERSION}.${CDK_MINOR}"
           
           # READMEのバージョン例を更新
@@ -95,7 +95,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: update AWS CDK to ${{ needs.check-update.outputs.latest_version }}"
-          title: "Update AWS CDK to ${{ needs.check-update.outputs.latest_version }}"
+          title: "Update AWS CDK to ${{ needs.check-update.outputs.latest_version }} on Node.js 18"
           body: |
             ## AWS CDK Update Available
             
@@ -111,7 +111,7 @@ jobs:
             
             ---
             *This PR was automatically created by the CDK update checker workflow.*
-          branch: update-cdk-${{ needs.check-update.outputs.latest_version }}
+          branch: update-node18-cdk-${{ needs.check-update.outputs.latest_version }}
           delete-branch: true
           labels: |
             dependencies

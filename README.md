@@ -5,7 +5,7 @@ This image based on `amazon/aws-sam-cli-build-image-nodejs18.x`, and you can use
 ## Usage
 
 ```shell
-docker pull ghcr.io/nojimage/docker-cdk:2.20
+docker pull ghcr.io/nojimage/docker-cdk:2.18
 ```
 
 ## Version semantics
