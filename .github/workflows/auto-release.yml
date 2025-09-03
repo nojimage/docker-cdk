@@ -1,0 +1,74 @@
+name: Auto Release on PR Merge
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - v2.20
+
+jobs:
+  create-release:
+    # PR がマージされた時のみ実行
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'dependencies')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get CDK version from PR
+        id: get-version
+        run: |
+          # PRタイトルからCDKバージョンを抽出
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          CDK_VERSION=$(echo "$PR_TITLE" | grep -oE "[0-9]+\.[0-9]+\.[0-9]+")
+          
+          if [ -z "$CDK_VERSION" ]; then
+            # .cdk-versionファイルから取得
+            CDK_VERSION=$(cat .cdk-version)
+          fi
+          
+          echo "CDK Version: $CDK_VERSION"
+          
+          # バージョン番号の生成
+          CDK_MAJOR=$(echo $CDK_VERSION | cut -d. -f1)
+          CDK_MINOR=$(echo $CDK_VERSION | cut -d. -f2)
+          CDK_PATCH=$(echo $CDK_VERSION | cut -d. -f3)
+          NODE_VERSION="20"
+          
+          # タグバージョンの生成（例: CDK 2.170.0 -> 2.20.170）
+          TAG_VERSION="${CDK_MAJOR}.${NODE_VERSION}.${CDK_MINOR}"
+          
+          echo "tag_version=$TAG_VERSION" >> $GITHUB_OUTPUT
+          echo "cdk_version=$CDK_VERSION" >> $GITHUB_OUTPUT
+          echo "Tag version: $TAG_VERSION"
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: v${{ steps.get-version.outputs.tag_version }}
+          name: Release ${{ steps.get-version.outputs.tag_version }}
+          body: |
+            ## 🚀 Docker CDK Release
+            
+            ### Versions
+            - **AWS CDK**: ${{ steps.get-version.outputs.cdk_version }}
+            - **Node.js**: 20.x
+            - **Base Image**: amazon/aws-sam-cli-build-image-nodejs20.x
+            
+            ### What's Changed
+            - Updated AWS CDK to version ${{ steps.get-version.outputs.cdk_version }}
+            
+            ### Docker Image
+            ```bash
+            docker pull ghcr.io/nojimage/docker-cdk:${{ steps.get-version.outputs.tag_version }}
+            ```
+            
+            ### Full Changelog
+            See [AWS CDK Release Notes](https://github.com/aws/aws-cdk/releases/tag/v${{ steps.get-version.outputs.cdk_version }})
+          draft: true
+          prerelease: false
