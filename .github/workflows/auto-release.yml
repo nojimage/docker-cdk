@@ -70,5 +70,5 @@ jobs:
             
             ### Full Changelog
             See [AWS CDK Release Notes](https://github.com/aws/aws-cdk/releases/tag/v${{ steps.get-version.outputs.cdk_version }})
-          draft: false
+          draft: true
           prerelease: false
