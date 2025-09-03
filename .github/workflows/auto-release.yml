@@ -48,12 +48,11 @@ jobs:
           echo "Tag version: $TAG_VERSION"
       
       - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: ncipollo/release-action@v1
         with:
-          tag_name: v${{ steps.get-version.outputs.tag_version }}
-          release_name: Release ${{ steps.get-version.outputs.tag_version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: v${{ steps.get-version.outputs.tag_version }}
+          name: Release ${{ steps.get-version.outputs.tag_version }}
           body: |
             ## 🚀 Docker CDK Release
             
@@ -74,10 +73,3 @@ jobs:
             See [AWS CDK Release Notes](https://github.com/aws/aws-cdk/releases/tag/v${{ steps.get-version.outputs.cdk_version }})
           draft: false
           prerelease: false
-      
-      - name: Trigger Docker Build
-        uses: peter-evans/repository-dispatch@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          event-type: docker-build
-          client-payload: '{"tag": "v${{ steps.get-version.outputs.tag_version }}"}'
