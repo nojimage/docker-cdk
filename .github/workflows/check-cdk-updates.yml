@@ -95,7 +95,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: update AWS CDK to ${{ needs.check-update.outputs.latest_version }}"
-          title: "Update AWS CDK to ${{ needs.check-update.outputs.latest_version }}"
+          title: "Update AWS CDK to ${{ needs.check-update.outputs.latest_version }} on Node.js 22"
           body: |
             ## AWS CDK Update Available
             
@@ -111,7 +111,7 @@ jobs:
             
             ---
             *This PR was automatically created by the CDK update checker workflow.*
-          branch: update-cdk-${{ needs.check-update.outputs.latest_version }}
+          branch: update-node22-cdk-${{ needs.check-update.outputs.latest_version }}
           delete-branch: true
           labels: |
             dependencies
