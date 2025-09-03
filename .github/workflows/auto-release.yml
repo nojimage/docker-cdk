@@ -50,6 +50,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          commit: ${{ github.event.pull_request.head.sha }}
           tag: v${{ steps.get-version.outputs.tag_version }}
           name: Release ${{ steps.get-version.outputs.tag_version }}
           body: |
