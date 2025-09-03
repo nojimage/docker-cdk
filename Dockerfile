@@ -1,6 +1,14 @@
 FROM public.ecr.aws/sam/build-nodejs20.x:latest
 
-RUN npm install -g aws-cdk@^2 typescript esbuild && npm install -g npm@^10
+# Copy CDK version file
+COPY .cdk-version /tmp/.cdk-version
+
+# Install CDK with specific version from .cdk-version file
+RUN CDK_VERSION=$(cat /tmp/.cdk-version) && \
+    echo "Installing CDK version: $CDK_VERSION" && \
+    npm install -g aws-cdk@$CDK_VERSION typescript esbuild && \
+    npm install -g npm@^10 && \
+    rm /tmp/.cdk-version
 RUN dnf install -y openssl
 
 # Install Session Manager plugin
