@@ -8,7 +8,7 @@ on:
 
 jobs:
   create-release:
-    # PR がマージされた時のみ実行
+    # Only executed when PR is merged
     if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'dependencies')
     runs-on: ubuntu-latest
     permissions:
@@ -22,24 +22,24 @@ jobs:
       - name: Get CDK version from PR
         id: get-version
         run: |
-          # PRタイトルからCDKバージョンを抽出
+          # Extract CDK version from PR title
           PR_TITLE="${{ github.event.pull_request.title }}"
           CDK_VERSION=$(echo "$PR_TITLE" | grep -oE "[0-9]+\.[0-9]+\.[0-9]+")
           
           if [ -z "$CDK_VERSION" ]; then
-            # .cdk-versionファイルから取得
+            # Retrieved from .cdk-version file
             CDK_VERSION=$(cat .cdk-version)
           fi
           
           echo "CDK Version: $CDK_VERSION"
           
-          # バージョン番号の生成
+          # Generating version number
           CDK_MAJOR=$(echo $CDK_VERSION | cut -d. -f1)
           CDK_MINOR=$(echo $CDK_VERSION | cut -d. -f2)
           CDK_PATCH=$(echo $CDK_VERSION | cut -d. -f3)
           NODE_VERSION="22"
           
-          # タグバージョンの生成（例: CDK 2.170.0 -> 2.22.170）
+          # Generating tag versions（e.g. CDK 2.170.0 -> 2.22.170）
           TAG_VERSION="${CDK_MAJOR}.${NODE_VERSION}.${CDK_MINOR}"
           
           echo "tag_version=$TAG_VERSION" >> $GITHUB_OUTPUT
