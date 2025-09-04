@@ -8,7 +8,7 @@ on:
 
 jobs:
   create-release:
-    # PR がマージされた時のみ実行
+    # Only executed when PR is merged
     if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'dependencies')
     runs-on: ubuntu-latest
     permissions:
@@ -22,24 +22,24 @@ jobs:
       - name: Get CDK version from PR
         id: get-version
         run: |
-          # PRタイトルからCDKバージョンを抽出
+          # Extract CDK version from PR title
           PR_TITLE="${{ github.event.pull_request.title }}"
           CDK_VERSION=$(echo "$PR_TITLE" | grep -oE "[0-9]+\.[0-9]+\.[0-9]+")
           
           if [ -z "$CDK_VERSION" ]; then
-            # .cdk-versionファイルから取得
+            # Retrieved from .cdk-version file
             CDK_VERSION=$(cat .cdk-version)
           fi
           
           echo "CDK Version: $CDK_VERSION"
           
-          # バージョン番号の生成
+          # Generating version number
           CDK_MAJOR=$(echo $CDK_VERSION | cut -d. -f1)
           CDK_MINOR=$(echo $CDK_VERSION | cut -d. -f2)
           CDK_PATCH=$(echo $CDK_VERSION | cut -d. -f3)
           NODE_VERSION="20"
           
-          # タグバージョンの生成（例: CDK 2.170.0 -> 2.20.170）
+          # Generating tag versions（e.g. CDK 2.170.0 -> 2.20.170）
           TAG_VERSION="${CDK_MAJOR}.${NODE_VERSION}.${CDK_MINOR}"
           
           echo "tag_version=$TAG_VERSION" >> $GITHUB_OUTPUT
@@ -57,12 +57,12 @@ jobs:
             ## 🚀 Docker CDK Release
             
             ### Versions
-            - **AWS CDK**: ${{ steps.get-version.outputs.cdk_version }}
+            - **AWS CDK Toolkit CLI**: ${{ steps.get-version.outputs.cdk_version }}
             - **Node.js**: 20.x
             - **Base Image**: amazon/aws-sam-cli-build-image-nodejs20.x
             
             ### What's Changed
-            - Updated AWS CDK to version ${{ steps.get-version.outputs.cdk_version }}
+            - Updated AWS CDK Toolkit CLI to version ${{ steps.get-version.outputs.cdk_version }}
             
             ### Docker Image
             ```bash
@@ -70,6 +70,6 @@ jobs:
             ```
             
             ### Full Changelog
-            See [AWS CDK Release Notes](https://github.com/aws/aws-cdk/releases/tag/v${{ steps.get-version.outputs.cdk_version }})
+            See [AWS CDK Toolkit CLI Release Notes](https://github.com/aws/aws-cdk-cli/releases/tag/cdk%40v${{ steps.get-version.outputs.cdk_version }})
           draft: true
           prerelease: false
