@@ -98,7 +98,7 @@ jobs:
           commit-message: "chore: update AWS CDK to ${{ needs.check-update.outputs.latest_version }}"
           title: "Update AWS CDK to ${{ needs.check-update.outputs.latest_version }} on Node.js 22"
           body: |
-            ## AWS CDK Update Available
+            ## AWS CDK Toolkit CLI Update Available
             
             - **Current version**: ${{ needs.check-update.outputs.current_version }}
             - **New version**: ${{ needs.check-update.outputs.latest_version }}
@@ -108,7 +108,7 @@ jobs:
             - Updated version references in documentation
             
             ### Release Notes
-            Please check the [AWS CDK Release Notes](https://github.com/aws/aws-cdk/releases) for details about this update.
+            Please check the [AWS CDK Toolkit CLI Release Notes](https://github.com/aws/aws-cdk-cli/releases) for details about this update.
             
             ---
             *This PR was automatically created by the CDK update checker workflow.*

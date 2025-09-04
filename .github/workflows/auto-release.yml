@@ -57,12 +57,12 @@ jobs:
             ## 🚀 Docker CDK Release
             
             ### Versions
-            - **AWS CDK**: ${{ steps.get-version.outputs.cdk_version }}
+            - **AWS CDK Toolkit CLI**: ${{ steps.get-version.outputs.cdk_version }}
             - **Node.js**: 22.x
             - **Base Image**: amazon/aws-sam-cli-build-image-nodejs22.x
             
             ### What's Changed
-            - Updated AWS CDK to version ${{ steps.get-version.outputs.cdk_version }}
+            - Updated AWS CDK Toolkit CLI to version ${{ steps.get-version.outputs.cdk_version }}
             
             ### Docker Image
             ```bash
@@ -70,6 +70,6 @@ jobs:
             ```
             
             ### Full Changelog
-            See [AWS CDK Release Notes](https://github.com/aws/aws-cdk/releases/tag/v${{ steps.get-version.outputs.cdk_version }})
+            See [AWS CDK Toolkit CLI Release Notes](https://github.com/aws/aws-cdk-cli/releases/tag/cdk%40v${{ steps.get-version.outputs.cdk_version }})
           draft: true
           prerelease: false
