@@ -9,8 +9,6 @@ on:
 jobs:
   check-update:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/nojimage/docker-cdk:2.18
     outputs:
       update_available: ${{ steps.check.outputs.update_available }}
       current_version: ${{ steps.check.outputs.current_version }}
@@ -24,7 +22,10 @@ jobs:
         id: check
         run: |
           # 現在のコンテナ内のCDKバージョンを取得
-          CURRENT_VERSION=$(cdk --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+          docker pull ghcr.io/nojimage/docker-cdk:2.18
+          CURRENT_VERSION=$(docker run --rm \
+            ghcr.io/nojimage/docker-cdk:2.18 \
+            cdk --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
           echo "Current CDK version in container: $CURRENT_VERSION"
           
           # npmから最新のCDK v2バージョンを取得（配列の最後の要素）
