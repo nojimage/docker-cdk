@@ -70,6 +70,6 @@ jobs:
             ```
             
             ### Full Changelog
-            See [AWS CDK Toolkit CLI Release Notes](https://github.com/aws/aws-cdk-cli/releases/tag/cdk%40v${{ steps.get-version.outputs.cdk_version }})
+            See [AWS CDK Toolkit CLI Release Notes](https://github.com/aws/aws-cdk-cli/releases/tag/aws-cdk%40v${{ steps.get-version.outputs.cdk_version }})
           draft: true
           prerelease: false
