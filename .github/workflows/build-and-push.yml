@@ -48,6 +48,7 @@ jobs:
             type=semver,pattern={{major}}
             type=raw,value=latest,enable={{is_default_branch}}
             type=ref,enable=true,priority=1000,prefix=,suffix=,event=branch
+            type=raw,value={{branch}}-{{sha}},enable=${{ github.event_name == 'workflow_dispatch' }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
