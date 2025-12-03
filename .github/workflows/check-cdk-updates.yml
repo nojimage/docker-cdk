@@ -79,10 +79,11 @@ jobs:
           CDK_VERSION="${{ needs.check-update.outputs.latest_version }}"
           CDK_MAJOR=$(echo $CDK_VERSION | cut -d. -f1)
           CDK_MINOR=$(echo $CDK_VERSION | cut -d. -f2)
+          CDK_PATCH=$(echo $CDK_VERSION | cut -d. -f3)
           NODE_VERSION="24"
           
-          # Generate tag names (e.g. 2.170.0 -> 2.22.170)
-          TAG_VERSION="${CDK_MAJOR}.${NODE_VERSION}.${CDK_MINOR}"
+          # Generate tag names (e.g. 2.170.0 -> 2.24.170-0)
+          TAG_VERSION="${CDK_MAJOR}.${NODE_VERSION}.${CDK_MINOR}-${CDK_PATCH}"
           
           # Updated README version in example
           sed -i "s|docker pull ghcr.io/nojimage/docker-cdk:[0-9.]*|docker pull ghcr.io/nojimage/docker-cdk:${CDK_MAJOR}.${NODE_VERSION}|g" README.md

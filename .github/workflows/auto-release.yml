@@ -39,8 +39,8 @@ jobs:
           CDK_PATCH=$(echo $CDK_VERSION | cut -d. -f3)
           NODE_VERSION="24"
           
-          # Generating tag versions（e.g. CDK 2.170.0 -> 2.22.170）
-          TAG_VERSION="${CDK_MAJOR}.${NODE_VERSION}.${CDK_MINOR}"
+          # Generating tag versions（e.g. CDK 2.170.0 -> 2.24.170-0）
+          TAG_VERSION="${CDK_MAJOR}.${NODE_VERSION}.${CDK_MINOR}-${CDK_PATCH}"
           
           echo "tag_version=$TAG_VERSION" >> $GITHUB_OUTPUT
           echo "cdk_version=$CDK_VERSION" >> $GITHUB_OUTPUT
