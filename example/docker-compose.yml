@@ -15,3 +15,6 @@ services:
       - ./:/var/stack
     environment:
       IN_DOCKER: 1
+      # If you want to disable telemetry, please enable the `CDK_DISABLE_CLI_TELEMETRY` environment variable.
+      # See: https://docs.aws.amazon.com/cdk/v2/guide/cli-telemetry.html
+      # CDK_DISABLE_CLI_TELEMETRY: true
