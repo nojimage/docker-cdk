@@ -12,6 +12,7 @@ docker pull ghcr.io/nojimage/docker-cdk:2.22
 
 - major: CDK version
 - minor: Node.js version
-- patch: patch version
+- patch: CDK minor version + CDK patch version (2-digit 0-padded)
 
-e.g. 2.22.0 => CDK 2.x with Node.js 22.x
+e.g. 2.22.103100 => CDK 2.1031.0 with Node.js 22.x  
+e.g. 2.22.103101 => CDK 2.1031.1 with Node.js 22.x
