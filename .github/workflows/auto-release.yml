@@ -4,7 +4,7 @@ on:
   pull_request:
     types: [closed]
     branches:
-      - v2.22
+      - v2.24
 
 jobs:
   create-release:
@@ -37,7 +37,7 @@ jobs:
           CDK_MAJOR=$(echo $CDK_VERSION | cut -d. -f1)
           CDK_MINOR=$(echo $CDK_VERSION | cut -d. -f2)
           CDK_PATCH=$(echo $CDK_VERSION | cut -d. -f3)
-          NODE_VERSION="22"
+          NODE_VERSION="24"
           
           # Generating tag versions（e.g. CDK 2.170.0 -> 2.22.170）
           TAG_VERSION="${CDK_MAJOR}.${NODE_VERSION}.${CDK_MINOR}"
@@ -58,8 +58,8 @@ jobs:
             
             ### Versions
             - **AWS CDK Toolkit CLI**: ${{ steps.get-version.outputs.cdk_version }}
-            - **Node.js**: 22.x
-            - **Base Image**: amazon/aws-sam-cli-build-image-nodejs22.x
+            - **Node.js**: 24.x
+            - **Base Image**: amazon/aws-sam-cli-build-image-nodejs24.x
             
             ### What's Changed
             - Updated AWS CDK Toolkit CLI to version ${{ steps.get-version.outputs.cdk_version }}

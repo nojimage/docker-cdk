@@ -15,7 +15,7 @@
 - 手動実行も可能
 
 **動作:**
-1. `ghcr.io/nojimage/docker-cdk:2.22` コンテナを使用
+1. `ghcr.io/nojimage/docker-cdk:2.24` コンテナを使用
 2. コンテナ内の `cdk --version` でカレントバージョンを取得
 3. `npm view aws-cdk@^2 version --json` で最新のCDK v2バージョンを取得
 4. バージョンに差異がある場合、PRを自動作成
@@ -34,7 +34,7 @@
 
 **動作:**
 1. PRタイトルまたは `.cdk-version` ファイルからCDKバージョンを取得
-2. バージョン変換（例：CDK 2.1027.0 → タグ 2.22.1027）
+2. バージョン変換（例：CDK 2.1027.0 → タグ 2.24.1027）
 3. GitHubリリースを自動作成
 
 ### 3. Docker イメージビルド (`build-and-push.yml`)
@@ -54,19 +54,19 @@
 ```
 CDK バージョン: 2.1027.0
 ↓
-タグバージョン: 2.22.1027
+タグバージョン: 2.24.1027
 ```
 
 **規則:**
 - Major: CDKのMajorバージョン（2）
-- Minor: Node.jsバージョン（22）
+- Minor: Node.jsバージョン（24）
 - Patch: CDKのMinorバージョン（1027）
 
 ### セマンティックバージョニング
 
-- `v2.22.1027` - 特定バージョン
-- `2.22.1027` - 特定バージョン（vプレフィックスなし）
-- `2.22` - Minor最新
+- `v2.24.1027` - 特定バージョン
+- `2.24.1027` - 特定バージョン（vプレフィックスなし）
+- `2.24` - Minor最新
 - `2` - Major最新
 - `latest` - 全体最新（デフォルトブランチのみ）
 
@@ -130,14 +130,14 @@ graph TD
    echo "2.1027.0" > .cdk-version
    
    # 関連ファイルの更新
-   sed -i "s|2\.22\.[0-9]*|2.22.1027|g" README.md
-   sed -i "s|2\.22\.[0-9]*|2.22.1027|g" example/README.md
-   sed -i "s|2\.22\.[0-9]*|2.22.1027|g" example/docker-compose.yml
+   sed -i "s|2\.24\.[0-9]*|2.24.1027|g" README.md
+   sed -i "s|2\.24\.[0-9]*|2.24.1027|g" example/README.md
+   sed -i "s|2\.24\.[0-9]*|2.24.1027|g" example/docker-compose.yml
    ```
 
 2. **リリースの手動作成**
    - GitHub の「Releases」から「Create a new release」
-   - タグ形式：`v2.22.1027`
+   - タグ形式：`v2.24.1027`
    - `dependencies` ラベルを含むPRをマージした場合と同じ動作
 
 ## トラブルシューティング

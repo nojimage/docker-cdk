@@ -22,9 +22,9 @@ jobs:
         id: check
         run: |
           # Get the CDK version in the current container
-          docker pull ghcr.io/nojimage/docker-cdk:2.22
+          docker pull ghcr.io/nojimage/docker-cdk:2.24
           CURRENT_VERSION=$(docker run --rm \
-            ghcr.io/nojimage/docker-cdk:2.22 \
+            ghcr.io/nojimage/docker-cdk:2.24 \
             cdk --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
           echo "Current CDK version in container: $CURRENT_VERSION"
           
@@ -79,7 +79,7 @@ jobs:
           CDK_VERSION="${{ needs.check-update.outputs.latest_version }}"
           CDK_MAJOR=$(echo $CDK_VERSION | cut -d. -f1)
           CDK_MINOR=$(echo $CDK_VERSION | cut -d. -f2)
-          NODE_VERSION="22"
+          NODE_VERSION="24"
           
           # Generate tag names (e.g. 2.170.0 -> 2.22.170)
           TAG_VERSION="${CDK_MAJOR}.${NODE_VERSION}.${CDK_MINOR}"
@@ -96,7 +96,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: update AWS CDK to ${{ needs.check-update.outputs.latest_version }}"
-          title: "Update AWS CDK to ${{ needs.check-update.outputs.latest_version }} on Node.js 22"
+          title: "Update AWS CDK to ${{ needs.check-update.outputs.latest_version }} on Node.js 24"
           body: |
             ## AWS CDK Toolkit CLI Update Available
             
@@ -112,7 +112,7 @@ jobs:
             
             ---
             *This PR was automatically created by the CDK update checker workflow.*
-          branch: update-node22-cdk-${{ needs.check-update.outputs.latest_version }}
+          branch: update-node24-cdk-${{ needs.check-update.outputs.latest_version }}
           delete-branch: true
           labels: |
             dependencies

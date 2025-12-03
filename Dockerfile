@@ -1,4 +1,4 @@
-FROM public.ecr.aws/sam/build-nodejs22.x:latest
+FROM public.ecr.aws/sam/build-nodejs24.x:latest
 
 # Copy CDK version file
 COPY .cdk-version /tmp/.cdk-version
