@@ -15,5 +15,5 @@ docker pull ghcr.io/nojimage/docker-cdk:2.24
 - patch: CDK minor version
 - prerelease: CDK patch version
 
-e.g. 2.24.1031-0 => CDK 2.1031.0 with Node.js 24.x
+e.g. 2.24.1031-0 => CDK 2.1031.0 with Node.js 24.x  
 e.g. 2.24.1031 => CDK 2.1031.x (latest patch) with Node.js 24.x
