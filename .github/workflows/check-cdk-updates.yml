@@ -116,6 +116,7 @@ jobs:
             ---
             *This PR was automatically created by the CDK update checker workflow.*
           branch: update-node24-cdk-${{ needs.check-update.outputs.latest_version }}
+          base: v2.24
           delete-branch: true
           labels: |
             dependencies
