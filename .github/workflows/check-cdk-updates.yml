@@ -7,46 +7,58 @@ on:
   workflow_dispatch:
 
 jobs:
-  check-update:
+  check-and-update:
     runs-on: ubuntu-latest
-    outputs:
-      update_available: ${{ steps.check.outputs.update_available }}
-      current_version: ${{ steps.check.outputs.current_version }}
-      latest_version: ${{ steps.check.outputs.latest_version }}
+    permissions:
+      contents: write
+      pull-requests: write
+
+    strategy:
+      matrix:
+        include:
+          - node_version: "22"
+            image_tag: "2.22"
+            base_branch: "v2.22"
+          - node_version: "24"
+            image_tag: "2.24"
+            base_branch: "v2.24"
+      fail-fast: false
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.base_branch }}
 
       - name: Check for CDK updates
         id: check
         run: |
           # Get the CDK version in the current container
-          docker pull ghcr.io/nojimage/docker-cdk:2.24
+          docker pull ghcr.io/nojimage/docker-cdk:${{ matrix.image_tag }}
           CURRENT_VERSION=$(docker run --rm \
-            ghcr.io/nojimage/docker-cdk:2.24 \
+            ghcr.io/nojimage/docker-cdk:${{ matrix.image_tag }} \
             cdk --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
           echo "Current CDK version in container: $CURRENT_VERSION"
-          
+
           # Get the latest CDK v2 version from npm (last element in the array)
           LATEST_VERSION=$(npm view aws-cdk@^2 version --json | jq -r '.[-1]')
           echo "Latest CDK version available: $LATEST_VERSION"
-          
+
           # If the version file does not exist, create it with the current version
           if [ ! -f .cdk-version ]; then
             echo "$CURRENT_VERSION" > .cdk-version
           fi
-          
+
           LAST_CHECKED_VERSION=$(cat .cdk-version)
           echo "Last checked version: $LAST_CHECKED_VERSION"
-          
+
           # Check if there is a new version
           if [ "$LATEST_VERSION" != "$CURRENT_VERSION" ]; then
             echo "update_available=true" >> $GITHUB_OUTPUT
             echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
             echo "latest_version=$LATEST_VERSION" >> $GITHUB_OUTPUT
             echo "New CDK version available: $LATEST_VERSION"
-            echo "### Update Available! :rocket:" >> $GITHUB_STEP_SUMMARY
+            echo "### [${{ matrix.base_branch }}] Update Available! :rocket:" >> $GITHUB_STEP_SUMMARY
             echo "- Current: $CURRENT_VERSION" >> $GITHUB_STEP_SUMMARY
             echo "- Latest: $LATEST_VERSION" >> $GITHUB_STEP_SUMMARY
           else
@@ -54,69 +66,59 @@ jobs:
             echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
             echo "latest_version=$LATEST_VERSION" >> $GITHUB_OUTPUT
             echo "No new CDK version available"
-            echo "### No Update Available :white_check_mark:" >> $GITHUB_STEP_SUMMARY
+            echo "### [${{ matrix.base_branch }}] No Update Available :white_check_mark:" >> $GITHUB_STEP_SUMMARY
             echo "Current version $CURRENT_VERSION is up to date" >> $GITHUB_STEP_SUMMARY
           fi
 
-  create-pr:
-    needs: check-update
-    if: needs.check-update.outputs.update_available == 'true'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Update CDK version
+        if: steps.check.outputs.update_available == 'true'
         run: |
           # Update the .cdk-version file
-          echo "${{ needs.check-update.outputs.latest_version }}" > .cdk-version
-          
+          echo "${{ steps.check.outputs.latest_version }}" > .cdk-version
+
           # Set variables for commits
-          CDK_VERSION="${{ needs.check-update.outputs.latest_version }}"
+          CDK_VERSION="${{ steps.check.outputs.latest_version }}"
           CDK_MAJOR=$(echo $CDK_VERSION | cut -d. -f1)
           CDK_MINOR=$(echo $CDK_VERSION | cut -d. -f2)
           CDK_PATCH=$(echo $CDK_VERSION | cut -d. -f3)
-          NODE_VERSION="24"
-          
+          NODE_VERSION="${{ matrix.node_version }}"
+
           # Generate tag names (e.g. 2.1031.0 -> 2.24.103100)
           # CDK patch version is 0-padded to 2 digits and concatenated
           CDK_PATCH_PADDED=$(printf "%02d" $CDK_PATCH)
           TAG_VERSION="${CDK_MAJOR}.${NODE_VERSION}.${CDK_MINOR}${CDK_PATCH_PADDED}"
-          
+
           # Updated README version in example
           sed -i "s|docker pull ghcr.io/nojimage/docker-cdk:[0-9.]*|docker pull ghcr.io/nojimage/docker-cdk:${CDK_MAJOR}.${NODE_VERSION}|g" README.md
           sed -i "s|docker pull ghcr.io/nojimage/docker-cdk:[0-9.]*|docker pull ghcr.io/nojimage/docker-cdk:${CDK_MAJOR}.${NODE_VERSION}|g" example/README.md
-          
+
           # Updated image tag in example/docker-compose.yml
           sed -i "s|image: ghcr.io/nojimage/docker-cdk:[0-9.]*|image: ghcr.io/nojimage/docker-cdk:${CDK_MAJOR}.${NODE_VERSION}|g" example/docker-compose.yml
 
       - name: Create Pull Request
+        if: steps.check.outputs.update_available == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: update AWS CDK to ${{ needs.check-update.outputs.latest_version }}"
-          title: "Update AWS CDK to ${{ needs.check-update.outputs.latest_version }} on Node.js 24"
+          commit-message: "chore: update AWS CDK to ${{ steps.check.outputs.latest_version }}"
+          title: "Update AWS CDK to ${{ steps.check.outputs.latest_version }} on Node.js ${{ matrix.node_version }}"
           body: |
             ## AWS CDK Toolkit CLI Update Available
-            
-            - **Current version**: ${{ needs.check-update.outputs.current_version }}
-            - **New version**: ${{ needs.check-update.outputs.latest_version }}
-            
+
+            - **Current version**: ${{ steps.check.outputs.current_version }}
+            - **New version**: ${{ steps.check.outputs.latest_version }}
+
             ### Changes
             - Updated `.cdk-version` file
             - Updated version references in documentation
-            
+
             ### Release Notes
             Please check the [AWS CDK Toolkit CLI Release Notes](https://github.com/aws/aws-cdk-cli/releases) for details about this update.
-            
+
             ---
             *This PR was automatically created by the CDK update checker workflow.*
-          branch: update-node24-cdk-${{ needs.check-update.outputs.latest_version }}
-          base: v2.24
+          branch: update-node${{ matrix.node_version }}-cdk-${{ steps.check.outputs.latest_version }}
+          base: ${{ matrix.base_branch }}
           delete-branch: true
           labels: |
             dependencies
