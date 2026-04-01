@@ -7,9 +7,9 @@ COPY .cdk-version /tmp/.cdk-version
 RUN CDK_VERSION=$(cat /tmp/.cdk-version) && \
     echo "Installing CDK version: $CDK_VERSION" && \
     npm install -g aws-cdk@$CDK_VERSION typescript esbuild && \
-    npm install -g npm@^11 && \
     corepack enable pnpm && \
     rm /tmp/.cdk-version
+RUN npm install -g npm@^11
 RUN dnf install -y openssl
 
 # Install Session Manager plugin
