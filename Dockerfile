@@ -7,7 +7,7 @@ COPY .cdk-version /tmp/.cdk-version
 RUN CDK_VERSION=$(cat /tmp/.cdk-version) && \
     echo "Installing CDK version: $CDK_VERSION" && \
     npm install -g aws-cdk@$CDK_VERSION typescript esbuild && \
-    corepack prepare npm@latest --activate && corepack enable npm && \
+    corepack prepare npm@^11 --activate && corepack enable npm && \
     corepack enable pnpm && \
     rm /tmp/.cdk-version
 RUN dnf install -y openssl
